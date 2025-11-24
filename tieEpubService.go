@@ -111,7 +111,6 @@ func ChanProcess() {
 		case process := <-ProcessChan:
 			ServiceApp.Event.Emit("downloadProcess", process)
 		case err := <-ErrorChan:
-			fmt.Println(err)
 			ServiceApp.Event.Emit("downloadError", err)
 		case <-SuccessChan:
 			ServiceApp.Event.Emit("downloadSuccess", nil)

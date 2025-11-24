@@ -93,6 +93,10 @@ const selectChapter = (index: number) => {
     nowSelectChapterIndex.value = index
 }
 const deleteChapter = (index: number) => {
+    if (tieData.value?.TotalContent.length == 1) {
+        ElMessage.warning({ message: "无法删除最后一章节内容", grouping: true, plain: true, placement: 'bottom' })
+        return
+    }
     DeleteChapter(index).then(() => {
         refreshTieData()
         ElMessage.success({ message: "章节删除成功", grouping: true, plain: true, placement: 'bottom' })
