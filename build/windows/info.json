@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "0.0.1"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "0.0.1",
+			"CompanyName": "StupidBear Studio",
+			"FileDescription": "百度贴吧小说下载器",
+			"LegalCopyright": "© 2025, StupidBear Studio",
+			"ProductName": "百度贴吧小说下载器",
+			"Comments": "百度贴吧小说下载器"
+		}
+	}
+}

@@ -1,0 +1,73 @@
+:root {
+    font-family: "Inter", IconFont, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif;
+}
+
+html {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    text-align: center;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+}
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    src: local(""),
+        url("./fonts/Inter-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "IconFont";
+    font-style: normal;
+    font-weight: 400;
+    src: local(""),
+        url("./fonts/iconfont.ttf") format("truetype");
+}
+
+.link {
+    color: rgb(64, 130, 245);
+    cursor: pointer;
+}
+
+#app {
+    height: 100vh;
+    text-align: center;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+pre,
+img,
+p,
+h1,
+div,
+.el-steps--simple {
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+
+.el-progress-bar__innerText span {
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+
+.el-steps--simple {
+    background-color: white !important;
+}
