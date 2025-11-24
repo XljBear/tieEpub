@@ -15,7 +15,7 @@ const toPage = (page: string) => {
             <div class="logo">
                 <img alt="" src="/images/logo.png" />
                 <p>百度贴吧小说下载器</p>
-                <p>v1.0.0</p>
+                <p>v0.0.1</p>
             </div>
             <div class="menu-box">
                 <MenuItem @click="toPage('download')" :active="nowPage == 'download'" icon="&#xe614;" label="下载" />

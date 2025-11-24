@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { StartDownload, GetTieData, SaveEPUB, OnReady, CreateAiCover } from '../../bindings/tieEpub/tieepubservice'
+import { StartDownload, GetTieData, SaveEPUB, OnReady, CreateAiCover, DeleteChapter } from '../../bindings/tieEpub/tieepubservice'
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Events } from "@wailsio/runtime"
@@ -26,20 +26,25 @@ onMounted(() => {
     })
     Events.On("downloadSuccess", () => {
         downloadLoading.value = false
+        refreshTieData()
         ElMessage.success({ message: "小说章节数据下载完成", grouping: true, plain: true, placement: 'bottom' })
-        GetTieData().then((result: [success: boolean, content: TieContent]) => {
-            if (!result[0]) {
-                return
-            }
-            canCreateEpub.value = true
-            tieData.value = result[1]
-        })
     })
     Events.On("coverError", (msg: { data: string }) => {
         ElMessage.error({ message: "AI封面生成失败:" + msg.data, grouping: true, plain: true, placement: 'bottom' })
     })
     setTimeout(() => OnReady(), 500)
 })
+const refreshTieData = () => {
+    GetTieData().then((result: [success: boolean, content: TieContent]) => {
+        if (!result[0]) {
+            return
+        }
+        canCreateEpub.value = true
+        tieData.value = result[1]
+        nowSelectChapterIndex.value = 0
+        aiCoverSelectChapter.value = 0
+    })
+}
 const enableAiCover = ref(false)
 const coverLoading = ref(false)
 const coverImgData = ref("")
@@ -87,7 +92,12 @@ const nowSelectChapterIndex = ref(0)
 const selectChapter = (index: number) => {
     nowSelectChapterIndex.value = index
 }
-
+const deleteChapter = (index: number) => {
+    DeleteChapter(index).then(() => {
+        refreshTieData()
+        ElMessage.success({ message: "章节删除成功", grouping: true, plain: true, placement: 'bottom' })
+    })
+}
 </script>
 <template>
     <h1>{{ canCreateEpub ? "创建EPUB文件" : "准备下载" }}</h1>
@@ -157,6 +167,13 @@ const selectChapter = (index: number) => {
                     <el-scrollbar height="100%">
                         <div @click="selectChapter(index)" v-for="(_, index) in tieData?.TotalContent" :key="index"
                             :class="['chapter-item', nowSelectChapterIndex === index ? 'active' : '']">
+                            <el-popconfirm width="160" @confirm="deleteChapter(index)" placement="bottom"
+                                :hide-icon="true" cancel-button-text="取消" confirm-button-text="删除"
+                                :title="`是否删除第${index + 1}章节？`">
+                                <template #reference>
+                                    <div class="remove">&#xeafb;</div>
+                                </template>
+                            </el-popconfirm>
                             第{{ index + 1 }}章
                         </div>
                     </el-scrollbar>
@@ -325,9 +342,34 @@ h1 {
                     box-sizing: border-box;
                     color: #333;
                     line-height: 20px;
+                    position: relative;
+
+                    .remove {
+                        position: absolute;
+                        right: 5px;
+                        color: #aaa;
+                        font-size: 18px;
+                        cursor: pointer;
+                        opacity: 0;
+                        transition: all 0.3s ease;
+                    }
+
+                    &:hover {
+                        .remove {
+                            opacity: 1;
+
+                            &:hover {
+                                color: rgb(199, 32, 32);
+                            }
+                        }
+                    }
 
                     &.active {
                         background-color: #e6f7ff;
+
+                        .remove {
+                            opacity: 1;
+                        }
                     }
                 }
             }
@@ -343,6 +385,7 @@ h1 {
                     font-size: 14px;
                     text-align: left;
                     color: #333;
+                    word-break: break-all;
                 }
             }
         }

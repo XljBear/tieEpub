@@ -13,6 +13,10 @@ export function CreateAiCover(keyword: string, chapterIndex: number): $Cancellab
     return $Call.ByID(2677229814, keyword, chapterIndex);
 }
 
+export function DeleteChapter(index: number): $CancellablePromise<void> {
+    return $Call.ByID(437259371, index);
+}
+
 export function GetConfig(key: string): $CancellablePromise<string> {
     return $Call.ByID(4244716749, key);
 }

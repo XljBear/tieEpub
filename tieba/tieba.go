@@ -22,15 +22,11 @@ import (
 )
 
 func extractPostID(url string) (string, error) {
-	// 定义匹配帖子 ID 的正则表达式
 	re := regexp.MustCompile(`https://tieba\.baidu\.com/p/(\d+)`)
-
-	// 查找匹配项
 	matches := re.FindStringSubmatch(url)
 	if len(matches) < 2 {
 		return "", fmt.Errorf("未找到帖子 ID")
 	}
-
 	return matches[1], nil
 }
 
@@ -98,7 +94,6 @@ func GetTie(tieRequest *TieRequest) {
 		if tieRequest.OnlyLZ {
 			urlStr += "&see_lz=1"
 		}
-		fmt.Println(urlStr)
 		c := colly.NewCollector()
 		c.OnHTML(".core_title_txt:first-of-type", func(e *colly.HTMLElement) {
 			if title != "" {
@@ -120,7 +115,7 @@ func GetTie(tieRequest *TieRequest) {
 			totalPage, _ = strconv.Atoi(parsedQuery.Get("pn"))
 		})
 		c.OnHTML(".j_d_post_content", func(e *colly.HTMLElement) {
-			contentText := e.Text
+			contentText, _ := e.DOM.Html()
 			contentText = strings.TrimSpace(contentText)
 			contentText = strings.Replace(contentText, "<br>", "\n", -1)
 			contentText = removeImgTags(contentText)
@@ -209,7 +204,6 @@ func StartGetAiImg(keyword string, chapterIndex int) (imgBase64 string, err erro
 	randSeed := rand.Int32()
 	keyword += "。请根据下面内容绘制合适的场景，该图像将作为书籍封面，请按照书籍封面的风格来绘制。"
 	keyword += removeHrefTags(removeImgTags(totalContent[chapterIndex]))
-	fmt.Println(keyword)
 	apiUrl := "https://api.siliconflow.cn/v1/images/generations"
 	method := "POST"
 	keyword = strings.Replace(keyword, "&nbsp;", " ", -1)
@@ -266,7 +260,6 @@ func StartGetAiImg(keyword string, chapterIndex int) (imgBase64 string, err erro
 	}
 	resp := &aiImgResponseData{}
 	err = json.Unmarshal(body, resp)
-	fmt.Println(resp)
 	if resp.Code != 0 {
 		err = errors.New(resp.Message)
 		return
@@ -357,4 +350,11 @@ func addChapter(e *epub.Epub, title, content, cssPath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func DeleteChapter(index int) {
+	if index < 0 || index > len(totalContent)-1 {
+		return
+	}
+	totalContent = append(totalContent[:index], totalContent[index+1:]...)
 }

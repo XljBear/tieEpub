@@ -97,6 +97,10 @@ func (tES *TieEpubService) OnReady() {
 	w.Show()
 }
 
+func (tES *TieEpubService) DeleteChapter(index int) {
+	tieba.DeleteChapter(index)
+}
+
 func ChanProcess() {
 	ProcessChan = make(chan int)
 	ErrorChan = make(chan string)
@@ -105,7 +109,6 @@ func ChanProcess() {
 	for {
 		select {
 		case process := <-ProcessChan:
-			fmt.Println(process)
 			ServiceApp.Event.Emit("downloadProcess", process)
 		case err := <-ErrorChan:
 			fmt.Println(err)
