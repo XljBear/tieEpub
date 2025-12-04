@@ -38,6 +38,10 @@ const props = defineProps({
     padding: 10px 20px;
     box-sizing: border-box;
 
+    div {
+        cursor: pointer;
+    }
+
     .icon {
         margin-right: 10px;
     }

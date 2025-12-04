@@ -17,6 +17,7 @@ const handleMinimise = () => {
         <div class="actions">
             <div @click="handleClose" class="button close">&#xe639;</div>
             <div @click="handleMinimise" class="button minimise">&#xe67a;</div>
+            <div @click="" class="button nop"></div>
         </div>
     </div>
 </template>
@@ -87,6 +88,11 @@ const handleMinimise = () => {
                 &:active {
                     background-color: rgb(255, 205, 131);
                 }
+            }
+
+            &.nop {
+                cursor: default;
+                background-color: rgb(78, 78, 78);
             }
         }
     }
